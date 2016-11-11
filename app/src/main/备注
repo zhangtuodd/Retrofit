@@ -1,0 +1,40 @@
+http://www.jianshu.com/p/3e13e5d34531
+2.0配置  依赖
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
+OkHttp配置：
+     HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            client = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .retryOnConnectionFailure(true)
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .addNetworkInterceptor(authorizationInterceptor)
+                    .build();
+    其中 level 为 BASIC / HEADERS / BODY，BODY等同于1.9中的FULL
+    retryOnConnectionFailure:错误重联
+    addInterceptor:设置应用拦截器，可用于设置公共参数，头信息，日志拦截等
+    addNetworkInterceptor：网络拦截器，可以用于重试或重写，对应与1.9中的setRequestInterceptor。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

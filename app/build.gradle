@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "com.example.seele.retrofit"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    //retrofit2.0依赖 版本号一直
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+
+
+    //Rxjava依赖,可以将Retrofit的ServiceApi接口不仅返回call还可以返回Observable
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+
+    compile 'net.orfjackal.retrolambda:retrolambda:1.8.1'
+    compile 'de.greenrobot:eventbus:2.4.0'
+
+    //在retrofit2.0中是没有日志功能的。但是retrofit2.0中依赖OkHttp，
+    // 所以也就能够通过OkHttp中的interceptor来实现实际的底层的请求和响应日志。
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
+
+
+
+}
