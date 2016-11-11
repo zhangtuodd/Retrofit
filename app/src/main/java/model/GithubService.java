@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 
@@ -20,7 +21,6 @@ public class GithubService {
     public static String ENDPOINT = "https://api.github.com/";
 
     private GithubAPIInterface mGithubAPI;
-
 
     private GithubService() {
         /**
@@ -40,7 +40,7 @@ public class GithubService {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)//设置重连
                 .connectTimeout(15, TimeUnit.SECONDS)
-                .addNetworkInterceptor(httpLoggingInterceptor)//网络拦截器（打印信息更丰富，消息实体内容长度类型等）
+                .addInterceptor(httpLoggingInterceptor)//设置应用拦截器，主要用于设置公共参数，头信息，日志拦截等
                 .build();
 
         /**
