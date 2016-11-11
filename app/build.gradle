@@ -38,7 +38,6 @@ dependencies {
 
     //在retrofit2.0中是没有日志功能的。但是retrofit2.0中依赖OkHttp，
     // 所以也就能够通过OkHttp中的interceptor来实现实际的底层的请求和响应日志。
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
