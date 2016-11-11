@@ -1,7 +1,7 @@
-package com.example.seele.retrofit;
+package model;
 
+import model.WeatherBean;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 
 /**

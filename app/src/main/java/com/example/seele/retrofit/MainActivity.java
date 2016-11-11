@@ -2,7 +2,6 @@ package com.example.seele.retrofit;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import event.UserDetailsLoadedCompleteEvent;
-import model.GithubServiceManager;
 import model.GithubUserDetail;
+import model.WeatherApi;
+import model.WeatherBean;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Observer;
@@ -30,8 +28,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static android.R.attr.button;
-import static android.R.id.button3;
+import static com.example.seele.retrofit.R.id.bt5;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button2 = (Button) findViewById(R.id.bt2);
         button3 = (Button) findViewById(R.id.bt3);
         button4 = (Button) findViewById(R.id.bt4);
-        button5 = (Button) findViewById(R.id.bt5);
+        button5 = (Button) findViewById(bt5);
 
 
         button1.setOnClickListener(this);
@@ -65,12 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt1:
+                //Retrofit基本使用过程
                 getData();
                 break;
             case R.id.bt2:
+                //Retrofit的响应过滤和错误拦截
                 new GithubServiceManager().fetchUserDetails();
                 break;
             case R.id.bt3:
+                //Rxjava配合操作符使用2
                 RxMothod2().toList().subscribe(new Action1<List<String>>() {
                     @Override
                     public void call(List<String> strings) {
@@ -79,10 +79,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.bt4:
+                //Rxjava配合Retrofit
                 RxRetrofit();
                 break;
-            case R.id.bt5:
+            case bt5:
+                //Rxjava配合操作符使用1
+                sb1.setLength(0);
+                str1 = "";
                 RxMethod1();
+                break;
+            default:
                 break;
         }
     }
@@ -121,12 +127,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.i("tag", "onError--------::" + e.toString());
                     }
 
                     @Override
                     public void onNext(String s) {
                         str1 = sb1.append(s).toString();
+
                     }
                 });
     }
@@ -135,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Observable<String> RxMothod2() {
         return Observable.just(
                 "http://www.baidu.com/",
-                "http://www.google.com/",
-                "https://www.bing.com/")
+                "http://www.sina.com/",
+                "https://www.google.com/")
                 .toList()
                 .flatMap(new Func1<List<String>, Observable<String>>() {
                     @Override
@@ -156,6 +162,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private Observable<String> UpperObservable(final String s) {
+        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                String ss = s.toUpperCase();
+                Log.i("tag", s.toString() + "Thread Name:" + Thread.currentThread().getName());
+                subscriber.onNext(ss);
+
+                Log.i("tag", "qian-------" + subscriber.isUnsubscribed());
+                subscriber.onCompleted();//主动回调，自定解除订阅
+                Log.i("tag", "hou-------" + subscriber.isUnsubscribed());
+            }
+        });
+//                .subscribeOn(Schedulers.io());//内部开启执行多线程，提高效率，顺序乱了
+        return observable;
+    }
+
+    private void RxRetrofit() {
+        final Observer subscriber = new Observer<List<GithubUserDetail>>() {
+            @Override
+            public void onCompleted() {
+                Log.i("tag", "onCompleted-----rx----");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("tag", "onError---rx------");
+            }
+
+            @Override
+            public void onNext(List<GithubUserDetail> githubUserDetails) {
+                Log.i("tag", "onNext-----rx----");
+                tv.setText(githubUserDetails.toString());
+            }
+        };
+        subscribe = new GithubServiceManager().rxFetchUserDetails().subscribe(subscriber);
+    }
+
+
     private void getData() {
         String baseUrl = "http://apistore.baidu.com/";
         Retrofit retrofit = new Retrofit.Builder()
@@ -166,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //用Retrofit创建出接口的代理对象
         WeatherApi weatherApi = retrofit.create(WeatherApi.class);
         Call<WeatherBean> weatherCall = weatherApi.getWeather();
-        //请求入队，
         weatherCall.enqueue(new Callback<WeatherBean>() {
             @Override
             public void onResponse(Call<WeatherBean> call, Response<WeatherBean> response) {
@@ -181,51 +225,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private Observable<String> UpperObservable(final String s) {
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                String ss = s.toUpperCase();
-                Log.i("tag", s.toString() + "Thread Name:" + Thread.currentThread().getName());
-                subscriber.onNext(ss);
-
-                Log.i("tag", "qian-------" + subscriber.isUnsubscribed());
-                subscriber.onCompleted();//主动回调，自定解除订阅
-                Log.i("tag", "hou-------" + subscriber.isUnsubscribed());
-            }
-        });
-//                .subscribeOn(Schedulers.io());//内部开启执行多线程，顺序乱了
-        return observable;
-    }
-
-    private void RxRetrofit() {
-        final Observer subscriber = new Observer<List<GithubUserDetail>>() {
-            @Override
-            public void onCompleted() {
-                Log.i("tag", "onCompleted-----rx----");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("tag", "onError---rx------");
-                //自己拦截
-                Log.i("tag", e.getMessage() + "Throwable---rx------::::" + e.toString());
-            }
-
-            @Override
-            public void onNext(List<GithubUserDetail> githubUserDetails) {
-                Log.i("tag", "onNext-----rx----");
-                tv.setText(githubUserDetails.toString());
-            }
-        };
-        subscribe = new GithubServiceManager().rxFetchUserDetails().subscribe(subscriber);
-    }
-
-
     public void onEvent(List<GithubUserDetail> githubUserDetails) {
         tv.setText("Retrofit----->>" + githubUserDetails.toString());
     }
-
 
     @Override
     protected void onPause() {

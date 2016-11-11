@@ -1,11 +1,9 @@
-package model;
+package filter;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
-
 import java.io.IOException;
-
 import retrofit2.adapter.rxjava.HttpException;
 
 /**

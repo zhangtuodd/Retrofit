@@ -2,27 +2,16 @@ package model;
 
 import android.util.Log;
 
-import com.example.seele.retrofit.WeatherApi;
-import com.example.seele.retrofit.WeatherBean;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Callback;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -98,11 +87,11 @@ public class GithubService {
         return mGithubAPI.rxRequestUserDetails(username);
     }
 
-   /* public Observable<List<GithubUser>> rxRequestUsers() {
+    public Observable<List<GithubUser>> rxRequestUsers() {
         return mGithubAPI.rxRequestUsers(PER_PAGE);//第一条
-    }*/
-   public Observable<List<GithubUser>> rxRequestUsers() {
+    }
+  /* public Observable<List<GithubUser>> rxRequestUsers() {
        return mGithubAPI.rxRequestUsers();//所有数据
-   }
+   }*/
 
 }

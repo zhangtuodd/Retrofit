@@ -1,4 +1,4 @@
-package com.example.seele.retrofit;
+package model;
 
 /**
  * Created by SEELE on 2016/9/23.

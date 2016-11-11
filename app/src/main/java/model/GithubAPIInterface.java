@@ -1,18 +1,12 @@
 package model;
 
 
-import com.example.seele.retrofit.WeatherBean;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 import rx.Observable;
 
 
@@ -39,13 +33,13 @@ interface GithubAPIInterface {
     @GET("users")
     List<GithubUser> requestUsers();
 
-   /* //请求第一条
+    //请求第一条
     @GET("users")
-    Observable<List<GithubUser>> rxRequestUsers(@Query("per_page") Integer perPage);*/
+    Observable<List<GithubUser>> rxRequestUsers(@Query("per_page") Integer perPage);
 
-    //所有数据
+   /* //所有数据
     @GET("users")
-    Observable<List<GithubUser>> rxRequestUsers();
+    Observable<List<GithubUser>> rxRequestUsers();*/
 
 
 }

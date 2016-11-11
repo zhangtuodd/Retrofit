@@ -1,4 +1,4 @@
-package model;
+package com.example.seele.retrofit;
 
 
 import android.util.Log;
@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import model.GithubService;
+import model.GithubUser;
+import model.GithubUserDetail;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +59,7 @@ public class GithubServiceManager {
 
             @Override
             public void onFailure(Call<List<GithubUser>> call, Throwable t) {
-//                BodyResponse errBody = ErrorHandler.handle(t);
+//                 ErrorHandler.handle(t);
             }
         });
     }
