@@ -2,14 +2,12 @@ package model;
 
 import android.util.Log;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
-
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -40,7 +38,8 @@ public class GithubService {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)//设置重连
                 .connectTimeout(15, TimeUnit.SECONDS)
-                .addInterceptor(httpLoggingInterceptor)//设置应用拦截器，主要用于设置公共参数，头信息，日志拦截等
+                .addNetworkInterceptor(new StethoInterceptor())//启用网络监视
+//                .addInterceptor(httpLoggingInterceptor)//设置应用拦截器，主要用于设置公共参数，头信息，日志拦截等
                 .build();
 
         /**
