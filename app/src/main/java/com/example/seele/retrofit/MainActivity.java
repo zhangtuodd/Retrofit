@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button4 = (Button) findViewById(R.id.bt4);
         button5 = (Button) findViewById(bt5);
 
-
+//注释1111
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
