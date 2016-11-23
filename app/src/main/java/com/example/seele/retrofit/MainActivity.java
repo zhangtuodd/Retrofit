@@ -24,11 +24,12 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action;
 import rx.functions.Action1;
+import rx.functions.Action2;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static com.example.seele.retrofit.R.id.bt5;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,17 +46,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EventBus.getDefault().register(this);
         button1 = (Button) findViewById(R.id.bt1);
         button2 = (Button) findViewById(R.id.bt2);
-        button3 = (Button) findViewById(R.id.bt3);
-        button4 = (Button) findViewById(R.id.bt4);
-        button5 = (Button) findViewById(bt5);
-
-//注释1111
+        button3 = (Button) findViewById(R.id.bt4);
+        button4 = (Button) findViewById(R.id.bt5);
+        button5 = (Button) findViewById(R.id.bt3);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
         tv = (TextView) findViewById(R.id.tv);
+
+//        testMap(); //测试map
+//        testFlatmap();//测试flatmap
+
+    }
+
+    private void testFlatmap() {
+        Observable.just("a", "b", "c")
+                .flatMap(
+                        new Func1<String, Observable<String>>() {
+                            @Override
+                            public Observable<String> call(String s) {
+                                Log.i("tag", "map--1----" + s);
+                                return Observable.just(s + "!!!");
+                            }
+                        })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Log.i("tag", "map--2----" + s);
+                        tv.setText(s);
+                    }
+                });
+    }
+
+    private void testMap() {
+        Observable.just("a", "b", "c")
+                //使用map进行转换，参数1：转换前的类型，参数2：转换后的类型
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String i) {
+                        String name = i;
+                        Log.i("tag","map--1----"+i);
+                        return name;//返回name
+                    }
+                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Log.i("tag","map--2----"+s);
+                       tv.setText(s);
+                    }
+                });
     }
 
     @Override
@@ -70,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new GithubServiceManager().fetchUserDetails();
                 break;
             case R.id.bt3:
+                //Rxjava配合操作符使用1
+                sb1.setLength(0);
+                str1 = "";
+                RxMethod1();
+                break;
+            case R.id.bt4:
                 //Rxjava配合操作符使用2
                 RxMothod2().toList().subscribe(new Action1<List<String>>() {
                     @Override
@@ -78,21 +128,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 break;
-            case R.id.bt4:
+            case R.id.bt5:
                 //Rxjava配合Retrofit
                 RxRetrofit();
                 break;
-            case bt5:
-                //Rxjava配合操作符使用1
-                sb1.setLength(0);
-                str1 = "";
-                RxMethod1();
-                break;
+
             default:
                 break;
         }
     }
 
+    /**
+     * Observable.from()/just方法，它接收一个集合/数组作为输入，然后每次输出一个元素给subscriber：返回的是Observable
+     * <p>
+     * func<param1,param2></> 一个函数，当应用于由源Observable发出的项时，返回一个Observable
+     *
+     * @param1,前面传过来Observable里面的结果集，这里可能说法不太标准，为了便于理解，注意是结果集
+     * @param2,返回的Observable
+     */
     private void RxMethod1() {
         List<Integer> integers = Arrays.asList(2, 3, 4, 5, 6, 7, 8, 9, 10);
         Observable.from(integers)
@@ -110,8 +163,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void call(Subscriber<? super String> subscriber) {
                                 String s = integer + "  /  ";
-                                subscriber.onNext(s);
                                 Log.i("tag", "RxMethod1-----22---::" + s);
+                                subscriber.onNext(s);
                                 subscriber.onCompleted();
                             }
                         });
@@ -119,9 +172,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<String>() {
+//                    @Override
+//                    public void call(String s) {
+//                        tv.setText(sb1.append(s).toString());
+//                        Log.i("tag", "Action1-------" + s);
+//                    }
+//                });
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onCompleted() {
+                        Log.i("tag", "Observer----onCompleted-----" );
                         tv.setText(str1);
                     }
 
@@ -131,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onNext(String s) {
+                        Log.i("tag", "Observer---next----" + s);
                         str1 = sb1.append(s).toString();
 
                     }
@@ -143,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 "http://www.baidu.com/",
                 "http://www.sina.com/",
                 "https://www.google.com/")
+                //下面两步无实际意义，可以去掉，这里做扩展api练手
                 .toList()
                 .flatMap(new Func1<List<String>, Observable<String>>() {
                     @Override
@@ -169,7 +232,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String ss = s.toUpperCase();
                 Log.i("tag", s.toString() + "Thread Name:" + Thread.currentThread().getName());
                 subscriber.onNext(ss);
-
+                /**
+                 * 下面三行用于测试subscriber.onCompleted方法
+                 */
                 Log.i("tag", "qian-------" + subscriber.isUnsubscribed());
                 subscriber.onCompleted();//主动回调，自定解除订阅
                 Log.i("tag", "hou-------" + subscriber.isUnsubscribed());

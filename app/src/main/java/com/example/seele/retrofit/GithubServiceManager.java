@@ -70,6 +70,9 @@ public class GithubServiceManager {
         }
     }
 
+    /**
+     * Observable.from()/just方法，它接收一个集合作为输入，然后每次输出一个元素给subscriber：返回的是Observable
+     */
     public Observable<List<GithubUserDetail>> rxFetchUserDetails() {
         return mService.rxRequestUsers()
                 .concatMap(new Func1<List<GithubUser>, Observable<? extends GithubUser>>() {
@@ -92,5 +95,5 @@ public class GithubServiceManager {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-
 }
+

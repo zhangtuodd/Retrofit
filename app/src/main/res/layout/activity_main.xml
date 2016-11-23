@@ -26,28 +26,30 @@
         android:id="@+id/bt3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Rxjava进阶"/>
+        android:text="Rxjava初级" />
 
     <Button
         android:id="@+id/bt4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Retrofit配合Rxjava" />
+        android:text="Rxjava进阶" />
+
     <Button
+        android:id="@+id/bt5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bt5"
-        android:text="Rxjava初级" />
+        android:text="Retrofit配合Rxjava" />
+
 
     <ScrollView
-        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/tv"
-            android:text="hello!!"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="hello!!" />
     </ScrollView>
 </LinearLayout>
