@@ -82,22 +82,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+    /**
+     * debounce(超时时间,超时时间单位,线程)---拦截
+     * 1秒后执行后面的逻辑;just是不断发射都不会执行，只有最后一个执行
+     * tag: map--1----c
+     * tag: map--2----c
+     * <p>
+     * filter 过滤 返回true执行下一步
+     * <p>
+     * take(num)取前num个进行操作
+     *
+     * doOnNext 可用于任何一个步骤，一般在订阅前使用，做数据保存，增删改等等
+     *
+     * skip(num) 跳过前几个操作
+     */
     private void testMap() {
         Observable.just("a", "b", "c")
+//                .debounce(1000, TimeUnit.MILLISECONDS,Schedulers.newThread())
+//                .filter(new Func1<String, Boolean>() {
+//                    @Override
+//                    public Boolean call(String s) {
+//                        if (s != null && "b".equals(s)) {
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//                })
+//                .take(2)
+//                .skip(1)
                 //使用map进行转换，参数1：转换前的类型，参数2：转换后的类型
+//
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String i) {
                         String name = i;
-                        Log.i("tag","map--1----"+i);
+                        Log.i("tag", "map--1----" + i);
                         return name;//返回name
                     }
                 })
+//                .doOnNext(new Action1<String>() {
+//                    @Override
+//                    public void call(String s) {
+//                        Log.i("tag", "doOnNext--1----" + s);
+//                    }
+//                })
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
-                        Log.i("tag","map--2----"+s);
-                       tv.setText(s);
+                        Log.i("tag", "map--2----" + s);
+                        tv.setText(s);
                     }
                 });
     }
@@ -294,14 +327,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv.setText("Retrofit----->>" + githubUserDetails.toString());
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         if (subscribe != null && subscribe.isUnsubscribed()) {
             subscribe.unsubscribe();
         }

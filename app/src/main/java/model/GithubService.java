@@ -39,7 +39,7 @@ public class GithubService {
                 .retryOnConnectionFailure(true)//设置重连
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .addNetworkInterceptor(new StethoInterceptor())//启用网络监视
-//                .addInterceptor(httpLoggingInterceptor)//设置应用拦截器，主要用于设置公共参数，头信息，日志拦截等
+                .addInterceptor(httpLoggingInterceptor)//设置应用拦截器，主要用于设置公共参数，头信息，日志拦截等
                 .build();
 
         /**
