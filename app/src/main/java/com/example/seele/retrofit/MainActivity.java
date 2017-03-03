@@ -61,6 +61,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     private void testFlatmap() {
         Observable.just("a", "b", "c")
                 .flatMap(
